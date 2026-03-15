@@ -11,7 +11,7 @@ Target length: ${input.targetWordCount} words (±10%). Do NOT cut off early.
 After the chapter text write exactly this on its own line: ---SUMMARY---
 Then write a 2-3 sentence summary of the chapter for narrative continuity.`;
 
-    const raw = await chatComplete(systemPrompt, buildChapterPrompt(input), "gpt-4o", 0.75);
+    const raw = await chatComplete(systemPrompt, buildChapterPrompt(input), undefined, 0.75);
     return parseChapterResponse(raw);
   }
 }

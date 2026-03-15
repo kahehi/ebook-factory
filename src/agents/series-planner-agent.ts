@@ -40,7 +40,7 @@ Rules:
 
 Recommend how many books this series should have, what each book covers, and how they build on each other.`;
 
-    const result = await chatCompleteJSON<SeriesPlanSuggestion>(systemPrompt, userPrompt, "gpt-4o", 0.5);
+    const result = await chatCompleteJSON<SeriesPlanSuggestion>(systemPrompt, userPrompt, undefined, 0.5);
 
     // Validate and normalize
     result.recommendedBookCount = result.books?.length ?? result.recommendedBookCount ?? 3;

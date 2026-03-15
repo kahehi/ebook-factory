@@ -21,7 +21,7 @@ Analyze the manuscript and return ONLY a JSON object with this structure:
 }
 Be specific and actionable. Only report real issues, not imagined ones.`;
 
-    const result = await chatCompleteJSON<QaAgentOutput>(systemPrompt, buildQaPrompt(input), "gpt-4o", 0.3);
+    const result = await chatCompleteJSON<QaAgentOutput>(systemPrompt, buildQaPrompt(input), undefined, 0.3);
 
     // Ensure findingType and severity values are valid
     const validTypes = new Set(["RED_THREAD","TRANSITION","CONSISTENCY","REPETITION","WORD_COUNT","COMPLETENESS","TONALITY"]);

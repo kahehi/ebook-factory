@@ -1,8 +1,6 @@
 import OpenAI from "openai";
 import { settingsService } from "@/services/settings-service";
 
-// Returns an OpenAI client using the key stored in the DB.
-// Throws a clear error if no key is configured.
 export async function getOpenAIClient(): Promise<OpenAI> {
   const apiKey = await settingsService.get("openai_api_key");
   if (!apiKey) {
@@ -13,16 +11,21 @@ export async function getOpenAIClient(): Promise<OpenAI> {
   return new OpenAI({ apiKey });
 }
 
-// Convenience wrapper: sends a single user message, returns the text response.
+// Reads the configured model from DB, falls back to gpt-4o-mini.
+export async function getModel(): Promise<string> {
+  return (await settingsService.get("ai_model")) ?? "gpt-4o-mini";
+}
+
 export async function chatComplete(
   systemPrompt: string,
   userPrompt: string,
-  model = "gpt-4o",
+  model?: string,
   temperature = 0.7
 ): Promise<string> {
   const client = await getOpenAIClient();
+  const resolvedModel = model ?? (await getModel());
   const response = await client.chat.completions.create({
-    model,
+    model: resolvedModel,
     temperature,
     messages: [
       { role: "system", content: systemPrompt },
@@ -32,17 +35,16 @@ export async function chatComplete(
   return response.choices[0]?.message?.content ?? "";
 }
 
-// Same as chatComplete but parses the response as JSON.
-// The system prompt should instruct the model to respond with valid JSON only.
 export async function chatCompleteJSON<T>(
   systemPrompt: string,
   userPrompt: string,
-  model = "gpt-4o",
+  model?: string,
   temperature = 0.3
 ): Promise<T> {
   const client = await getOpenAIClient();
+  const resolvedModel = model ?? (await getModel());
   const response = await client.chat.completions.create({
-    model,
+    model: resolvedModel,
     temperature,
     response_format: { type: "json_object" },
     messages: [
