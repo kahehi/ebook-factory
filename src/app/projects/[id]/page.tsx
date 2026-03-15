@@ -106,6 +106,8 @@ function FindingTypeBadge({ type }: { type: QaFindingType }) {
     TONALITY:     "Tonalität",
     SPELLING:     "Rechtschreibung",
     GRAMMAR:      "Grammatik",
+    FORMATTING:   "Formatierung",
+    CITATION:     "Zitierung",
   };
   return (
     <span className="inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-zinc-800/80 text-zinc-300">

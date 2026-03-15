@@ -30,7 +30,9 @@ export type QaFindingType =
   | "COMPLETENESS"
   | "TONALITY"
   | "SPELLING"
-  | "GRAMMAR";
+  | "GRAMMAR"
+  | "FORMATTING"
+  | "CITATION";
 
 export type Severity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 

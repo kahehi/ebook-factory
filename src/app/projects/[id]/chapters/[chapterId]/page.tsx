@@ -81,13 +81,13 @@ export default function ChapterDetailPage() {
     if (!chapter) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/projects/${projectId}/chapters/${chapterId}/rewrite`, {
-        method: "POST",
+      const res = await fetch(`/api/projects/${projectId}/chapters/${chapterId}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ content: editContent }),
       });
       const data = await res.json();
-      if (data.success) { setChapter(data.data); setMode("view"); }
+      if (data.success) { await loadChapter(); setMode("view"); }
     } finally { setSaving(false); }
   }
 
