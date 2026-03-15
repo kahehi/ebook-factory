@@ -16,8 +16,7 @@ interface GenerateChaptersResponse {
 }
 
 // POST /api/projects/:id/generate-chapters
-// This sets up the structure and returns chapter IDs for parallel n8n processing.
-// In n8n, call POST /api/projects/:id/chapters/:chapterId/generate for each chapter in parallel.
+// Returns chapter IDs for parallel processing.
 export async function POST(
   _req: NextRequest,
   { params }: RouteParams
@@ -95,7 +94,7 @@ export async function POST(
         projectId: params.id,
         chapterIds,
         totalChapters: chapters.length,
-        message: `Ready to generate ${chapters.length} chapters. Call POST /api/projects/${params.id}/chapters/{chapterId}/generate for each chapter. For n8n: use a SplitInBatches node with the chapterIds array.`,
+        message: `Ready to generate ${chapters.length} chapters. Call POST /api/projects/${params.id}/chapters/{chapterId}/generate for each chapter.`,
       },
       event: "chapters.queued",
     });

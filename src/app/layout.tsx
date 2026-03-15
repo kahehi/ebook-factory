@@ -7,7 +7,7 @@ import { BreadcrumbProvider } from "@/lib/breadcrumb-store";
 
 export const metadata: Metadata = {
   title: "E-Book Factory",
-  description: "AI-powered e-book generation with n8n agent architecture",
+  description: "AI-powered e-book generation with multi-agent architecture",
 };
 
 export default function RootLayout({

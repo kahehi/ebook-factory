@@ -40,7 +40,7 @@ export function Sidebar() {
             E-Book Factory
           </p>
           <p className="truncate text-xs" style={{ color: "var(--fg-3)" }}>
-            n8n · KI-Agenten
+            KI-Agenten
           </p>
         </div>
       </div>

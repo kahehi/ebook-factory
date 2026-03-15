@@ -374,26 +374,6 @@ export default function SettingsPage() {
           )}
         </CardContent>
       </Card>
-
-      {/* Placeholder */}
-      <Card className="opacity-40">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-xl"
-              style={{ background: "var(--bg-tint)", border: "1px solid var(--border-xs)" }}
-            >
-              <KeyRound className="h-4 w-4" style={{ color: "var(--fg-4)" }} />
-            </div>
-            <div>
-              <CardTitle className="text-base" style={{ color: "var(--fg-3)" }}>n8n Webhook-URL</CardTitle>
-              <CardDescription style={{ color: "var(--fg-5)" }}>
-                Demnächst verfügbar — n8n Cloud Webhook-Endpunkt konfigurieren.
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 # E-Book Factory
 
-A production-ready Next.js web application for AI-powered e-book generation, built on an n8n agent architecture where one agent handles each chapter and a QA/cohesion agent reviews the complete manuscript.
+A production-ready Next.js web application for AI-powered e-book generation with a multi-agent architecture where one agent handles each chapter and a QA/cohesion agent reviews the complete manuscript.
 
 ## Architecture Overview
 
@@ -11,7 +11,7 @@ User → Dashboard
          ↓
   BookPlannerAgent → Chapter outlines + word budgets + style rules
          ↓
-  n8n Workflow (parallel)
+  Parallel Generation
   ├── ChapterAgent (Chapter 1)
   ├── ChapterAgent (Chapter 2)
   ├── ChapterAgent (Chapter 3)
@@ -172,68 +172,6 @@ All endpoints return `{ success: boolean, data: T, event?: string }`.
 {
   "findingIds": ["cuid1", "cuid2"]
 }
-```
-
-## n8n Integration Guide
-
-### Overview
-
-The application emits webhook events to `WEBHOOK_URL` (if configured in `.env`). Each event is a POST request with:
-
-```json
-{
-  "eventType": "chapter.generated",
-  "timestamp": "2024-01-15T10:30:00.000Z",
-  "projectId": "clxxx...",
-  "payload": { ... }
-}
-```
-
-### Event Types
-
-| Event | Trigger | Payload |
-|-------|---------|---------|
-| `project.created` | New project created | `{ projectId, projectTitle, planUrl }` |
-| `plan.generated` | Book plan ready | `{ projectId, chapterCount, totalTargetWords, generateChaptersUrl }` |
-| `chapter.generated` | Single chapter done | `{ projectId, chapterId, chapterOrder, wordCount }` |
-| `chapter.rewritten` | Chapter rewritten | `{ projectId, chapterId, chapterOrder, wordCount }` |
-| `qa.started` | QA analysis started | `{ projectId }` |
-| `qa.completed` | QA analysis done | `{ projectId, qaRunId, overallScore, findingCount, applyFixesUrl }` |
-| `manuscript.ready` | Manuscript assembled | `{ projectId, version, wordCount, manuscriptUrl }` |
-
-### Recommended n8n Workflow: Parallel Chapter Generation
-
-```
-Webhook (plan.generated)
-  ↓
-HTTP Request: POST /api/projects/{{projectId}}/generate-chapters
-  ↓ Returns: { chapterIds: ["id1", "id2", ...] }
-SplitInBatches (chapterIds, batch size: 3-5)
-  ↓ (parallel for each batch)
-HTTP Request: POST /api/projects/{{projectId}}/chapters/{{chapterId}}/generate
-  ↓ (wait for all to complete)
-Merge
-  ↓
-HTTP Request: POST /api/projects/{{projectId}}/run-qa
-  ↓
-HTTP Request: POST /api/projects/{{projectId}}/manuscript
-```
-
-### n8n Workflow: Full Automation
-
-1. **Trigger**: Webhook on `project.created`
-2. **Step 1**: `POST /api/projects/{id}/plan` — generate book plan
-3. **Step 2**: `POST /api/projects/{id}/generate-chapters` — get chapter IDs
-4. **Step 3**: SplitInBatches + parallel `POST /api/projects/{id}/chapters/{cid}/generate`
-5. **Step 4**: After all chapters done: `POST /api/projects/{id}/run-qa`
-6. **Step 5**: If score < 70: `POST /api/projects/{id}/apply-qa-fixes` + regenerate low-scoring chapters
-7. **Step 6**: `POST /api/projects/{id}/manuscript` — assemble final document
-8. **Notify**: Email/Slack with download link
-
-### Environment Variable Setup
-
-```bash
-WEBHOOK_URL="https://your-n8n-instance.com/webhook/ebook-factory"
 ```
 
 ## Connecting Real AI
