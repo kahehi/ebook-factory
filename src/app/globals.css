@@ -1,0 +1,317 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    /* Obsidian Studio palette */
+    --bg-base:       8 8 15;
+    --bg-surface:    12 12 22;
+    --bg-elevated:   18 18 32;
+    --bg-hover:      24 24 42;
+
+    --accent-violet: 124 92 252;
+    --accent-amber:  245 158 11;
+    --accent-emerald: 52 211 153;
+    --accent-rose:   251 113 133;
+
+    /* shadcn tokens mapped to Obsidian */
+    --background:    240 30% 5%;
+    --foreground:    240 10% 96%;
+    --card:          240 25% 7%;
+    --card-foreground: 240 10% 96%;
+    --popover:       240 25% 7%;
+    --popover-foreground: 240 10% 96%;
+    --primary:       258 93% 68%;
+    --primary-foreground: 0 0% 100%;
+    --secondary:     240 20% 12%;
+    --secondary-foreground: 240 10% 96%;
+    --muted:         240 20% 12%;
+    --muted-foreground: 240 10% 50%;
+    --accent:        240 20% 14%;
+    --accent-foreground: 240 10% 96%;
+    --destructive:   0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border:        240 15% 16%;
+    --input:         240 20% 12%;
+    --ring:          258 93% 68%;
+    --radius:        0.6rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    font-family: 'Outfit', system-ui, sans-serif;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* ─── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: rgb(8 8 15); }
+::-webkit-scrollbar-thumb { background: rgb(40 40 70); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(80 60 180); }
+
+/* ─── Dot grid texture for main canvas ───────────────── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(124,92,252,0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ─── Animated fade-up for page sections ─────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up   { animation: fade-up 0.45s cubic-bezier(.22,.68,0,1.2) both; }
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+
+/* ─── Card shimmer on hover ───────────────────────────── */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+.card-shine::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    rgba(124,92,252,0.07) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.card-shine:hover::before { opacity: 1; }
+
+/* ─── Active nav indicator (left border) ─────────────── */
+.nav-active {
+  border-left: 2px solid rgb(124 92 252);
+  background: linear-gradient(90deg, rgba(124,92,252,0.12) 0%, transparent 100%);
+  color: rgb(167 139 250);
+}
+
+/* ─── Gradient progress bar fill ─────────────────────── */
+.progress-gradient > div {
+  background: linear-gradient(90deg, #7c5cfc 0%, #a78bfa 100%);
+  box-shadow: 0 0 8px rgba(124,92,252,0.5);
+}
+html.light .progress-gradient > div {
+  background: linear-gradient(90deg, #5b3fd4 0%, #7c5cfc 100%);
+  box-shadow: 0 0 6px rgba(91,63,212,0.35);
+}
+
+/* ─── Stat value gradient text ───────────────────────── */
+.stat-value {
+  background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Button violet glow ──────────────────────────────── */
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(124,92,252,0.45), 0 0 40px rgba(124,92,252,0.15);
+}
+
+/* ─── Glass card surface ──────────────────────────────── */
+.glass-card {
+  background: rgba(18,18,32,0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(124,92,252,0.12);
+}
+
+/* ─── Accent pill badge ───────────────────────────────── */
+.badge-dot::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: currentColor;
+  opacity: 0.8;
+}
+
+/* ─── Prose for chapter content ──────────────────────── */
+.prose-dark {
+  color: rgb(180 180 210);
+  line-height: 1.8;
+  font-size: 0.9375rem;
+}
+.prose-dark h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgb(240 240 255);
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.prose-dark h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: rgb(210 210 240);
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.prose-dark p  { margin-bottom: 1.1rem; }
+.prose-dark strong { color: rgb(240 240 255); font-weight: 600; }
+.prose-dark ul,
+.prose-dark ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+.prose-dark li { margin-bottom: 0.3rem; }
+
+/* ─── Mono font for code / IDs ────────────────────────── */
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ─── Theme Design Tokens ──────────────────────────────── */
+/* These are used in inline style={{ }} throughout the app */
+
+:root {
+  /* Card tokens (used in card.tsx) */
+  --card-bg: rgba(14, 14, 30, 0.92);
+  --card-border: rgba(124, 92, 252, 0.13);
+  --card-shadow: 0 2px 28px rgba(0, 0, 0, 0.45), 0 0 1px rgba(124, 92, 252, 0.1);
+
+  /* Foreground / text */
+  --fg-1: rgba(238, 235, 255, 0.95);   /* headings, strong */
+  --fg-2: rgba(200, 188, 255, 0.75);   /* body text */
+  --fg-3: rgba(167, 139, 250, 0.58);   /* secondary/label */
+  --fg-4: rgba(124, 92, 252, 0.46);    /* muted */
+  --fg-5: rgba(124, 92, 252, 0.28);    /* very muted */
+  --fg-accent: rgb(167, 139, 250);     /* accent text */
+
+  /* Backgrounds */
+  --bg-page: rgb(7, 7, 18);
+  --bg-surface: rgb(11, 11, 22);
+  --bg-elevated: rgb(16, 16, 32);
+  --bg-tint: rgba(124, 92, 252, 0.07);
+  --bg-tint-md: rgba(124, 92, 252, 0.12);
+  --bg-tint-lg: rgba(124, 92, 252, 0.18);
+  --bg-input: rgba(124, 92, 252, 0.05);
+
+  /* Borders */
+  --border-xs: rgba(124, 92, 252, 0.07);
+  --border-sm: rgba(124, 92, 252, 0.13);
+  --border-md: rgba(124, 92, 252, 0.22);
+
+  /* Accent */
+  --accent: rgb(124, 92, 252);
+  --accent-fg: rgb(167, 139, 250);
+
+  /* Structural backgrounds (for CSS classes) */
+  --bg-sidebar: rgb(9, 9, 20);
+  --bg-header: rgba(9, 9, 20, 0.96);
+  --border-sidebar: rgba(124, 92, 252, 0.11);
+  --border-header: rgba(124, 92, 252, 0.09);
+}
+
+html.light {
+  /* Card tokens */
+  --card-bg: rgba(255, 253, 255, 0.98);
+  --card-border: rgba(91, 63, 212, 0.13);
+  --card-shadow: 0 2px 20px rgba(80, 50, 200, 0.07), 0 0 1px rgba(91, 63, 212, 0.1);
+
+  /* Foreground / text */
+  --fg-1: rgba(14, 8, 46, 0.96);      /* deep indigo-black */
+  --fg-2: rgba(38, 22, 100, 0.82);    /* deep indigo */
+  --fg-3: rgba(80, 55, 168, 0.68);    /* medium violet */
+  --fg-4: rgba(91, 63, 212, 0.52);    /* accent muted */
+  --fg-5: rgba(91, 63, 212, 0.32);    /* very muted */
+  --fg-accent: rgb(91, 63, 212);      /* accent text */
+
+  /* Backgrounds */
+  --bg-page: rgb(243, 240, 255);
+  --bg-surface: rgb(250, 248, 255);
+  --bg-elevated: rgb(255, 255, 255);
+  --bg-tint: rgba(91, 63, 212, 0.05);
+  --bg-tint-md: rgba(91, 63, 212, 0.09);
+  --bg-tint-lg: rgba(91, 63, 212, 0.14);
+  --bg-input: rgba(91, 63, 212, 0.04);
+
+  /* Borders */
+  --border-xs: rgba(91, 63, 212, 0.07);
+  --border-sm: rgba(91, 63, 212, 0.13);
+  --border-md: rgba(91, 63, 212, 0.22);
+
+  /* Accent */
+  --accent: rgb(91, 63, 212);
+  --accent-fg: rgb(91, 63, 212);
+
+  /* Structural backgrounds */
+  --bg-sidebar: rgb(248, 245, 255);
+  --bg-header: rgba(248, 245, 255, 0.97);
+  --border-sidebar: rgba(91, 63, 212, 0.12);
+  --border-header: rgba(91, 63, 212, 0.1);
+
+  color-scheme: light;
+}
+
+/* ─── Structural background classes ──────────────────── */
+.app-bg { background: var(--bg-page); }
+.sidebar-bg {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-sidebar);
+}
+.header-bg {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border-header);
+  backdrop-filter: blur(14px);
+}
+
+/* ─── Light mode additional overrides ───────────────── */
+html.light .dot-grid {
+  background-image: radial-gradient(circle, rgba(91,63,212,0.07) 1px, transparent 1px);
+}
+html.light ::-webkit-scrollbar-track { background: var(--bg-page); }
+html.light ::-webkit-scrollbar-thumb { background: rgba(91,63,212,0.2); }
+html.light ::-webkit-scrollbar-thumb:hover { background: rgba(91,63,212,0.4); }
+
+/* Text overrides for light mode */
+html.light .text-white,
+html.light .text-zinc-200 { color: var(--fg-1) !important; }
+html.light .text-zinc-500 { color: var(--fg-3) !important; }
+html.light .stat-value {
+  background: linear-gradient(135deg, #180e38 0%, #5b3fd4 60%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+html.light .nav-active {
+  color: rgb(80, 55, 200) !important;
+  background: linear-gradient(90deg, rgba(91,63,212,0.14) 0%, transparent 100%);
+}
+html.light .prose-dark { color: var(--fg-2); }
+html.light .prose-dark h2,
+html.light .prose-dark h3,
+html.light .prose-dark strong { color: var(--fg-1); }
+html.light .glass-card {
+  background: rgba(255,253,255,0.9);
+  border-color: var(--border-sm);
+}
+html.light .btn-glow:hover {
+  box-shadow: 0 0 18px rgba(91,63,212,0.3), 0 0 36px rgba(91,63,212,0.1);
+}
+
+/* Dark mode enhancements */
+html.dark .stat-value {
+  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

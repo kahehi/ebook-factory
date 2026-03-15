@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+// Note: SQLite does not support enums. Status fields use String with
+// documented allowed values (see src/types/index.ts for type definitions).
+
+model Project {
+  id               String   @id @default(cuid())
+  title            String
+  topic            String
+  bookType         String
+  targetAudience   String
+  language         String   @default("German")
+  targetPageCount  Int
+  targetWordCount  Int
+  actualWordCount  Int      @default(0)
+  chapterCount     Int
+  tonality         String
+  seriesContext    String?
+  seriesId          String?
+  bookIndexInSeries Int?
+  // ProjectStatus: DRAFT | PLANNING | GENERATING | QA_REVIEW | QA_FIXING | COMPLETED | ARCHIVED
+  status           String   @default("DRAFT")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  bookPlan           BookPlan?
+  chapters           Chapter[]
+  qaRuns             QaRun[]
+  manuscriptVersions ManuscriptVersion[]
+  series             BookSeries? @relation(fields: [seriesId], references: [id])
+
+  @@map("projects")
+}
+
+model BookPlan {
+  id            String   @id @default(cuid())
+  projectId     String   @unique
+  outline       String   // JSON array of chapter outline objects
+  globalSummary String
+  styleRules    String
+  conceptList   String   // JSON array of key concepts
+  noGoList      String   // JSON array of topics/phrases to avoid
+  generatedAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("book_plans")
+}
+
+model Chapter {
+  id                 String   @id @default(cuid())
+  projectId          String
+  order              Int
+  title              String
+  goal               String
+  targetWordCount    Int
+  actualWordCount    Int      @default(0)
+  // ChapterStatus: PENDING | GENERATING | DRAFT | REVIEWING | APPROVED | NEEDS_REVISION
+  status             String   @default("PENDING")
+  summary            String?
+  prevChapterSummary String?
+  nextChapterSummary String?
+  currentContent     String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  project    Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versions   ChapterVersion[]
+  qaFindings QaFinding[]
+
+  @@unique([projectId, order])
+  @@map("chapters")
+}
+
+model ChapterVersion {
+  id        String   @id @default(cuid())
+  chapterId String
+  version   Int
+  content   String
+  wordCount Int
+  summary   String?
+  createdAt DateTime @default(now())
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([chapterId, version])
+  @@map("chapter_versions")
+}
+
+model QaRun {
+  id           String    @id @default(cuid())
+  projectId    String
+  // QaRunStatus: RUNNING | COMPLETED | FAILED
+  status       String    @default("RUNNING")
+  overallScore Float?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  project  Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  findings QaFinding[]
+
+  @@map("qa_runs")
+}
+
+model QaFinding {
+  id          String  @id @default(cuid())
+  qaRunId     String
+  chapterId   String?
+  // QaFindingType: RED_THREAD | TRANSITION | CONSISTENCY | REPETITION | WORD_COUNT | COMPLETENESS | TONALITY
+  findingType String
+  // Severity: LOW | MEDIUM | HIGH | CRITICAL
+  severity    String
+  description String
+  suggestion  String
+  // QaFindingStatus: OPEN | ACKNOWLEDGED | FIXED | IGNORED
+  status      String  @default("OPEN")
+
+  qaRun   QaRun    @relation(fields: [qaRunId], references: [id], onDelete: Cascade)
+  chapter Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+
+  @@map("qa_findings")
+}
+
+model ManuscriptVersion {
+  id        String   @id @default(cuid())
+  projectId String
+  version   Int
+  content   String
+  wordCount Int
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, version])
+  @@map("manuscript_versions")
+}
+
+model BookSeries {
+  id             String    @id @default(cuid())
+  title          String
+  topic          String
+  targetAudience String
+  language       String    @default("German")
+  tonality       String
+  // SeriesStatus: PLANNING | ACTIVE | COMPLETED | ARCHIVED
+  status         String    @default("PLANNING")
+  suggestedPlan  String?   // JSON: SeriesPlanSuggestion
+  confirmedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  projects Project[]
+
+  @@map("book_series")
+}
+
+model AppSetting {
+  key       String   @id   // e.g. "openai_api_key"
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("app_settings")
+}
