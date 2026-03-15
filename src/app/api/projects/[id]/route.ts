@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { projectService } from "@/services/project-service";
 import type { ApiResponse, ProjectResponse } from "@/types";

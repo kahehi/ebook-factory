@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { seriesService } from "@/services/series-service";
 import type { ApiResponse, SeriesPlanSuggestion } from "@/types";

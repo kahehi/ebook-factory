@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { chapterService } from "@/services/chapter-service";
 import { eventService } from "@/services/event-service";
