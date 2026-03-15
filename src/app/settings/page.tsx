@@ -18,7 +18,7 @@ export default function SettingsPage() {
   const { theme, toggle } = useTheme();
   const [settings, setSettings] = useState<SettingState[]>([]);
   const [loading, setLoading] = useState(true);
-  const [aiModel, setAiModel] = useState<string>("gpt-4.1");
+  const [aiModel, setAiModel] = useState<string>("gpt-5.4");
   const [modelSaving, setModelSaving] = useState(false);
 
   const [apiKeyInput, setApiKeyInput] = useState("");
@@ -214,16 +214,16 @@ export default function SettingsPage() {
           <div className="grid grid-cols-2 gap-3">
             {[
               {
-                id: "gpt-4.1",
-                name: "GPT-4.1",
+                id: "gpt-5.4",
+                name: "GPT-5.4",
                 badge: "Beste Qualität",
                 badgeColor: "rgba(52,211,153,0.15)",
                 badgeText: "rgb(52,211,153)",
                 desc: "Neuestes Flaggschiff-Modell — stärkste Schreibqualität, ~45s/Kap.",
               },
               {
-                id: "gpt-4.1-mini",
-                name: "GPT-4.1 mini",
+                id: "gpt-5-mini",
+                name: "GPT-5 mini",
                 badge: "5× schneller",
                 badgeColor: "rgba(245,158,11,0.15)",
                 badgeText: "rgb(245,158,11)",
