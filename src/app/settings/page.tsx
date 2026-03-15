@@ -18,7 +18,7 @@ export default function SettingsPage() {
   const { theme, toggle } = useTheme();
   const [settings, setSettings] = useState<SettingState[]>([]);
   const [loading, setLoading] = useState(true);
-  const [aiModel, setAiModel] = useState<string>("gpt-4o");
+  const [aiModel, setAiModel] = useState<string>("gpt-4.1");
   const [modelSaving, setModelSaving] = useState(false);
 
   const [apiKeyInput, setApiKeyInput] = useState("");
@@ -204,7 +204,7 @@ export default function SettingsPage() {
             <div className="flex-1">
               <CardTitle className="text-base text-white">KI-Modell</CardTitle>
               <CardDescription style={{ color: "var(--fg-3)" }}>
-                Modell für Kapitelgenerierung. Plan & QA nutzen immer GPT-4o.
+                Modell für alle KI-Agenten (Plan, Kapitel, QA).
               </CardDescription>
             </div>
             {modelSaving && <Loader2 className="h-4 w-4 animate-spin ml-auto" style={{ color: "var(--fg-4)" }} />}
@@ -214,20 +214,20 @@ export default function SettingsPage() {
           <div className="grid grid-cols-2 gap-3">
             {[
               {
-                id: "gpt-4o",
-                name: "GPT-4o",
+                id: "gpt-4.1",
+                name: "GPT-4.1",
                 badge: "Beste Qualität",
                 badgeColor: "rgba(52,211,153,0.15)",
                 badgeText: "rgb(52,211,153)",
-                desc: "Nuanciertere Sprache, bessere Stilumsetzung — aber langsamer (~45s/Kap.)",
+                desc: "Neuestes Flaggschiff-Modell — stärkste Schreibqualität, ~45s/Kap.",
               },
               {
-                id: "gpt-4o-mini",
-                name: "GPT-4o mini",
+                id: "gpt-4.1-mini",
+                name: "GPT-4.1 mini",
                 badge: "5× schneller",
                 badgeColor: "rgba(245,158,11,0.15)",
                 badgeText: "rgb(245,158,11)",
-                desc: "Solide Qualität für die meisten Projekte — ca. 8–12s pro Kapitel",
+                desc: "Sehr gute Qualität, deutlich schneller — ca. 8–12s pro Kapitel",
               },
             ].map((m) => {
               const isSelected = aiModel === m.id;

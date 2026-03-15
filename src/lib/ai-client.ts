@@ -13,7 +13,7 @@ export async function getOpenAIClient(): Promise<OpenAI> {
 
 // Reads the configured model from DB, falls back to gpt-4o-mini.
 export async function getModel(): Promise<string> {
-  return (await settingsService.get("ai_model")) ?? "gpt-4o-mini";
+  return (await settingsService.get("ai_model")) ?? "gpt-4.1";
 }
 
 export async function chatComplete(
