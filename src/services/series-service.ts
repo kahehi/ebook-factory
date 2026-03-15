@@ -146,4 +146,9 @@ export class SeriesService {
   }
 }
 
+  async deleteSeries(id: string): Promise<void> {
+    await prisma.bookSeries.delete({ where: { id } });
+  }
+}
+
 export const seriesService = new SeriesService();

@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ArrowRight, BookOpen, Clock, PlusCircle } from "lucide-react";
+import { DeleteButton } from "@/components/ui/delete-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,7 +102,10 @@ export default async function ProjectsPage() {
                           {project.topic.slice(0, 100)}{project.topic.length > 100 ? "…" : ""}
                         </p>
                       </div>
-                      <StatusBadge status={project.status} />
+                      <div className="flex items-center gap-1 shrink-0">
+                        <StatusBadge status={project.status} />
+                        <DeleteButton id={project.id} type="project" name={project.title} />
+                      </div>
                     </div>
 
                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: "var(--fg-5)" }}>

@@ -37,3 +37,21 @@ export async function GET(
     );
   }
 }
+
+// DELETE /api/series/[id]
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  try {
+    const { id } = await params;
+    await seriesService.deleteSeries(id);
+    return NextResponse.json({ success: true, data: null });
+  } catch (error) {
+    console.error("[DELETE /api/series/[id]]", error);
+    return NextResponse.json(
+      { success: false, data: null, error: "Failed to delete series" },
+      { status: 500 }
+    );
+  }
+}

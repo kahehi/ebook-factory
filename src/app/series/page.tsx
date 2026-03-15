@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Library, PlusCircle, ArrowRight } from "lucide-react";
+import { DeleteButton } from "@/components/ui/delete-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -81,7 +82,10 @@ export default async function SeriesPage() {
                   <h3 className="line-clamp-2 text-base font-semibold text-white">
                     {series.title}
                   </h3>
-                  <SeriesStatusBadge status={series.status as SeriesStatus} />
+                  <div className="flex items-center gap-1 shrink-0">
+                    <SeriesStatusBadge status={series.status as SeriesStatus} />
+                    <DeleteButton id={series.id} type="series" name={series.title} />
+                  </div>
                 </div>
 
                 <p className="mb-4 line-clamp-3 text-sm" style={{ color: "var(--fg-3)" }}>
