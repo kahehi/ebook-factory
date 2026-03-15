@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getOpenAIClient } from "@/lib/ai-client";
+import { getOpenAIClient, getModel } from "@/lib/ai-client";
 import { buildChapterPrompt } from "@/agents/prompt-builder";
 import type { ChapterOutlineItem } from "@/types";
 
@@ -84,21 +84,29 @@ Then write a 2-3 sentence summary of the chapter for narrative continuity.`;
             : undefined,
         });
 
-        const modelSetting = await prisma.appSetting.findUnique({
-          where: { key: "ai_model" },
-        });
-        const model = modelSetting?.value ?? "gpt-4o";
-
+        const model = await getModel();
         const client = await getOpenAIClient();
-        const aiStream = await client.chat.completions.create({
+
+        const streamParams = {
           model,
-          temperature: 0.75,
-          stream: true,
+          stream: true as const,
           messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
+            { role: "system" as const, content: systemPrompt },
+            { role: "user" as const, content: userPrompt },
           ],
-        });
+        };
+
+        let aiStream;
+        try {
+          aiStream = await client.chat.completions.create({ ...streamParams, temperature: 0.75 });
+        } catch (err: unknown) {
+          const msg = err instanceof Error ? err.message : String(err);
+          if (msg.includes("temperature")) {
+            aiStream = await client.chat.completions.create(streamParams);
+          } else {
+            throw err;
+          }
+        }
 
         let fullText = "";
         for await (const chunk of aiStream) {
