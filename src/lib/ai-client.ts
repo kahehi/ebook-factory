@@ -11,9 +11,25 @@ export async function getOpenAIClient(): Promise<OpenAI> {
   return new OpenAI({ apiKey });
 }
 
-// Reads the configured model from DB, falls back to gpt-4o-mini.
 export async function getModel(): Promise<string> {
   return (await settingsService.get("ai_model")) ?? "gpt-5.4";
+}
+
+async function createCompletion(
+  client: OpenAI,
+  params: Parameters<typeof client.chat.completions.create>[0]
+): Promise<OpenAI.Chat.ChatCompletion> {
+  try {
+    return await client.chat.completions.create(params) as OpenAI.Chat.ChatCompletion;
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    // Some models (o1, gpt-5.x, etc.) don't support custom temperature
+    if (msg.includes("temperature") && "temperature" in params) {
+      const { temperature: _, ...rest } = params;
+      return await client.chat.completions.create(rest) as OpenAI.Chat.ChatCompletion;
+    }
+    throw err;
+  }
 }
 
 export async function chatComplete(
@@ -24,7 +40,7 @@ export async function chatComplete(
 ): Promise<string> {
   const client = await getOpenAIClient();
   const resolvedModel = model ?? (await getModel());
-  const response = await client.chat.completions.create({
+  const response = await createCompletion(client, {
     model: resolvedModel,
     temperature,
     messages: [
@@ -43,7 +59,7 @@ export async function chatCompleteJSON<T>(
 ): Promise<T> {
   const client = await getOpenAIClient();
   const resolvedModel = model ?? (await getModel());
-  const response = await client.chat.completions.create({
+  const response = await createCompletion(client, {
     model: resolvedModel,
     temperature,
     response_format: { type: "json_object" },

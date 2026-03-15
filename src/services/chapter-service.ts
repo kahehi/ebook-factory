@@ -77,7 +77,7 @@ export class ChapterService {
     ]);
 
     // Build agent input
-    const outline = bookPlan.outline as unknown as ChapterOutlineItem[];
+    const outline = (typeof bookPlan.outline === "string" ? JSON.parse(bookPlan.outline) : bookPlan.outline) as ChapterOutlineItem[];
 
     const agentInput = {
       bookTitle: project.title,
@@ -88,8 +88,8 @@ export class ChapterService {
       tonality: project.tonality,
       globalSummary: bookPlan.globalSummary,
       styleRules: bookPlan.styleRules,
-      conceptList: bookPlan.conceptList as unknown as string[],
-      noGoList: bookPlan.noGoList as unknown as string[],
+      conceptList: (typeof bookPlan.conceptList === "string" ? JSON.parse(bookPlan.conceptList) : bookPlan.conceptList) as string[],
+      noGoList: (typeof bookPlan.noGoList === "string" ? JSON.parse(bookPlan.noGoList) : bookPlan.noGoList) as string[],
       seriesContext: project.seriesContext ?? undefined,
       outline,
       chapterOrder: chapter.order,
@@ -190,7 +190,7 @@ export class ChapterService {
       }),
     ]);
 
-    const outline = bookPlan.outline as unknown as ChapterOutlineItem[];
+    const outline = (typeof bookPlan.outline === "string" ? JSON.parse(bookPlan.outline) : bookPlan.outline) as ChapterOutlineItem[];
 
     const agentInput = {
       bookTitle: project.title,
@@ -201,8 +201,8 @@ export class ChapterService {
       tonality: project.tonality,
       globalSummary: bookPlan.globalSummary,
       styleRules: bookPlan.styleRules,
-      conceptList: bookPlan.conceptList as unknown as string[],
-      noGoList: bookPlan.noGoList as unknown as string[],
+      conceptList: (typeof bookPlan.conceptList === "string" ? JSON.parse(bookPlan.conceptList) : bookPlan.conceptList) as string[],
+      noGoList: (typeof bookPlan.noGoList === "string" ? JSON.parse(bookPlan.noGoList) : bookPlan.noGoList) as string[],
       seriesContext: project.seriesContext ?? undefined,
       outline,
       chapterOrder: chapter.order,

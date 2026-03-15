@@ -18,7 +18,7 @@ export async function POST(
   try {
     const bookPlan = await bookPlanService.generatePlan(params.id);
 
-    const outline = bookPlan.outline as unknown as Array<{ targetWordCount: number }>;
+    const outline = (typeof bookPlan.outline === "string" ? JSON.parse(bookPlan.outline) : bookPlan.outline) as Array<{ targetWordCount: number }>;
     const totalTargetWords = outline.reduce(
       (sum, ch) => sum + (ch.targetWordCount ?? 0),
       0
