@@ -28,7 +28,9 @@ export type QaFindingType =
   | "REPETITION"
   | "WORD_COUNT"
   | "COMPLETENESS"
-  | "TONALITY";
+  | "TONALITY"
+  | "SPELLING"
+  | "GRAMMAR";
 
 export type Severity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 

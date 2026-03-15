@@ -96,7 +96,7 @@ function SeverityBadge({ severity }: { severity: Severity }) {
 }
 
 function FindingTypeBadge({ type }: { type: QaFindingType }) {
-  const labels: Record<QaFindingType, string> = {
+  const labels: Record<string, string> = {
     RED_THREAD:   "Roter Faden",
     TRANSITION:   "Übergang",
     CONSISTENCY:  "Konsistenz",
@@ -104,6 +104,8 @@ function FindingTypeBadge({ type }: { type: QaFindingType }) {
     WORD_COUNT:   "Wortanzahl",
     COMPLETENESS: "Vollständigkeit",
     TONALITY:     "Tonalität",
+    SPELLING:     "Rechtschreibung",
+    GRAMMAR:      "Grammatik",
   };
   return (
     <span className="inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-zinc-800/80 text-zinc-300">
@@ -1020,6 +1022,45 @@ export default function ProjectDetailPage() {
                           <Button size="sm" variant="ghost" className="gap-1 text-xs" style={{ color: "var(--fg-4)" }} onClick={() => handleGenerateChapter(chapter.id)} disabled={actionLoading !== null}>
                             <RefreshCw className="h-3 w-3" />
                             Neu
+                          </Button>
+                        )}
+                        {(chapter.status === "DRAFT" || chapter.status === "REVIEWING") && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="gap-1 text-xs"
+                            style={{ color: "rgb(52,211,153)" }}
+                            disabled={actionLoading !== null}
+                            onClick={async () => {
+                              await fetch(`/api/projects/${projectId}/chapters/${chapter.id}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ status: "APPROVED" }),
+                              });
+                              await loadProject();
+                            }}
+                          >
+                            <CheckCircle2 className="h-3 w-3" />
+                            Abgenommen
+                          </Button>
+                        )}
+                        {chapter.status === "APPROVED" && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="gap-1 text-xs"
+                            style={{ color: "var(--fg-5)" }}
+                            disabled={actionLoading !== null}
+                            onClick={async () => {
+                              await fetch(`/api/projects/${projectId}/chapters/${chapter.id}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ status: "DRAFT" }),
+                              });
+                              await loadProject();
+                            }}
+                          >
+                            Rückgängig
                           </Button>
                         )}
                         <Button size="sm" variant="ghost" className="text-xs" asChild>
