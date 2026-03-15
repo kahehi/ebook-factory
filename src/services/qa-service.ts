@@ -56,8 +56,8 @@ export class QaService {
         tonality: project.tonality,
         globalSummary: bookPlan.globalSummary,
         styleRules: bookPlan.styleRules,
-        conceptList: bookPlan.conceptList as string[],
-        noGoList: bookPlan.noGoList as string[],
+        conceptList: bookPlan.conceptList as unknown as string[],
+        noGoList: bookPlan.noGoList as unknown as string[],
         targetWordCount: project.targetWordCount,
         chapters: chapters.map((ch) => ({
           id: ch.id,

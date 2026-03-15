@@ -407,8 +407,8 @@ export default function ProjectDetailPage() {
     if (!project?.bookPlan) return;
     setPlanDraft({
       styleRules: project.bookPlan.styleRules ?? "",
-      conceptList: (project.bookPlan.conceptList as string[]) ?? [],
-      noGoList: (project.bookPlan.noGoList as string[]) ?? [],
+      conceptList: (project.bookPlan.conceptList as unknown as string[]) ?? [],
+      noGoList: (project.bookPlan.noGoList as unknown as string[]) ?? [],
     });
     setPlanEditMode(true);
   }
@@ -818,7 +818,7 @@ export default function ProjectDetailPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex flex-wrap gap-2">
-                      {(planEditMode && planDraft ? planDraft.conceptList : (project.bookPlan.conceptList as string[])).map((c) => (
+                      {(planEditMode && planDraft ? planDraft.conceptList : (project.bookPlan.conceptList as unknown as string[])).map((c) => (
                         <span
                           key={c}
                           className="flex items-center gap-1 rounded-md px-2 py-1 text-xs"
@@ -880,7 +880,7 @@ export default function ProjectDetailPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <ul className="space-y-1">
-                      {(planEditMode && planDraft ? planDraft.noGoList : (project.bookPlan.noGoList as string[])).map((item, i) => (
+                      {(planEditMode && planDraft ? planDraft.noGoList : (project.bookPlan.noGoList as unknown as string[])).map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-xs" style={{ color: "var(--fg-4)" }}>
                           <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-red-500" />
                           <span className="flex-1">{item}</span>
