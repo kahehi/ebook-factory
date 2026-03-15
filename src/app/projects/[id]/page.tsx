@@ -47,7 +47,6 @@ interface LiveStream {
   text: string;
   wordCount: number;
 }
-}
 
 // ─── Status Badges ─────────────────────────────────────────────────────────────
 
